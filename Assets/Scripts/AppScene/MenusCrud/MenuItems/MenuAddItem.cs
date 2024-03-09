@@ -77,8 +77,7 @@ public class MenuAddItem : MenuCrud, IResult
         if (MyApplication.repository != null)
         {
             ItemRemote itemRemote = new ItemRemote(name: inputFieldName.text, imageName: imageName);
-            bool saveResult = await MyApplication.repository.SaveItemRemote(itemRemote, resultUi: this);
-            if(saveResult) { Invoke("ShowInterstitialAd", AppConfig.timeInterstitialAd); }
+            await MyApplication.repository.SaveItemRemote(itemRemote, resultUi: this);
         }
         else
         {
