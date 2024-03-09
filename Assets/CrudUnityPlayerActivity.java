@@ -26,7 +26,7 @@
  *********************************************************************************/
 
 
- package com.yourcompany.unityappcrud;
+ package com.mycompany.appcrudtutorialpublic;
 
  import com.unity3d.player.UnityPlayerActivity;
  import android.content.Intent;

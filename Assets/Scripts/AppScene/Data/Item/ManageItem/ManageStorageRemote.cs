@@ -38,7 +38,7 @@ using UnityEngine;
 /// </summary>
 public class ManageStorageRemote
 {
-    private string _storageUrl = "gs://appcrudunity3d.appspot.com/users/"; // Reemplaza con la URI pública de tu imagen.
+    private string _storageDir = AppConfig.STORAGE_DIR; 
     private string _folderUserUid;
     private string _generateImageName;
     private byte[] _fileBytes;
@@ -52,7 +52,7 @@ public class ManageStorageRemote
 
     public ManageStorageRemote(string imageName)
     {
-        _storageUrl += FirebaseSDK.GetInstance().auth.CurrentUser.UserId + "/imageItems/" + imageName + ".png";
+        _storageDir += "/users/" + FirebaseSDK.GetInstance().auth.CurrentUser.UserId + "/imageItems/" + imageName + ".png";
     }
 
     public async Task<bool> UploadFileFirebaseStorage()
@@ -67,7 +67,7 @@ public class ManageStorageRemote
             if (_generateImageName != null)
             {
 
-                StorageReference storageRef = firebaseStorage.GetReferenceFromUrl("gs://appcrudunity3d.appspot.com");
+                StorageReference storageRef = firebaseStorage.GetReferenceFromUrl(AppConfig.STORAGE_DIR);
                 StorageReference userRef = storageRef
                     .Child("users")
                     .Child(_folderUserUid)
@@ -118,13 +118,13 @@ public class ManageStorageRemote
         TaskCompletionSource<Texture2D> initializationTask = new TaskCompletionSource<Texture2D>();
 
         // Parsea la URL de almacenamiento para obtener la referencia a la imagen.
-        var storageReference = FirebaseSDK.GetInstance().firebaseStorage.GetReferenceFromUrl(_storageUrl);
+        var storageReference = FirebaseSDK.GetInstance().firebaseStorage.GetReferenceFromUrl(_storageDir);
         // Descarga el archivo.
         await storageReference.GetBytesAsync(long.MaxValue).ContinueWithOnMainThread(task2 =>
          {
              if (task2.IsFaulted || task2.IsCanceled)
              {
-                 Debug.Log("La imagén no existe " + _storageUrl);   
+                 Debug.Log("La imagén no existe " + _storageDir);   
                  Debug.LogWarning("Error al descargar la imagen: " + task2.Exception);
                  initializationTask.SetResult(null);
              }
@@ -158,9 +158,9 @@ public class ManageStorageRemote
     /// <param name="filePath"></param>
     public async Task<bool> DeleteImageRemote()
     {
-        Debug.Log("Imagen remota a eliminar: " + _storageUrl);
+        Debug.Log("Imagen remota a eliminar: " + _storageDir);
 
-        var storageReference = FirebaseSDK.GetInstance().firebaseStorage.GetReferenceFromUrl(_storageUrl);
+        var storageReference = FirebaseSDK.GetInstance().firebaseStorage.GetReferenceFromUrl(_storageDir);
 
         bool deleteSuccess = false;
 
