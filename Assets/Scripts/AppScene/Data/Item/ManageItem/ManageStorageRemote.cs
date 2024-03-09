@@ -126,7 +126,7 @@ public class ManageStorageRemote
              {
                  Debug.Log("La imagén no existe " + _storageUrl);   
                  Debug.LogWarning("Error al descargar la imagen: " + task2.Exception);
-                 initializationTask.SetResult(new Texture2D(1, 1));
+                 initializationTask.SetResult(null);
              }
              else
              {
@@ -143,7 +143,7 @@ public class ManageStorageRemote
                  }
                  else
                  {
-                     initializationTask.SetResult(new Texture2D(1, 1));
+                     initializationTask.SetResult(null);
                      Debug.LogError("Error al cargar la textura desde los bytes.");
                  }
              }

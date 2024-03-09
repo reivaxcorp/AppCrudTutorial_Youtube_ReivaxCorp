@@ -133,16 +133,23 @@ public class MenuUpdateItem : MenuCrud, IResult, IResultDialogDelete
         byte[] fileBytes = fileManager.GetBytesImageSelected();
         // Generar nombre de imagén aleatorea
         generateImageName = Guid.NewGuid().ToString();
-        ManageStorageRemote manageStorageRemote =
-            new ManageStorageRemote(generateImageName, fileManager.folderNameUser, fileBytes);
         // subir nueva imagén
-        bool resultUpload = await manageStorageRemote.UploadFileFirebaseStorage();
-        fileManager.ChangeNameImageCopySelected(generateImageName);
-        // borrar imagén anterior
-        await DeleteImageRemote();
-        // actualizar documento
-        UpdateDocumentRemote();
-        return resultUpload;
+        bool resultUpload = await MyApplication.repository.UploadFileFirebaseStorage(generateImageName, fileManager.folderNameUser, fileBytes);
+
+        if (resultUpload)
+        {
+            fileManager.ChangeNameImageCopySelected(generateImageName);
+            // borrar imagén anterior
+            await DeleteImageRemote();
+            // actualizar documento
+            UpdateDocumentRemote();
+            return resultUpload;
+        }
+        else
+        {
+            SetResultCrudUi("Error", "Error al subir la  imagén");
+            return false;
+        }
     }
 
     private async void UpdateDocumentRemote()
@@ -153,7 +160,7 @@ public class MenuUpdateItem : MenuCrud, IResult, IResultDialogDelete
             name: inputFieldName.text,
             imageName: isImageChanged ? generateImageName : oldImageName,
             creationDate: currentItemSelected.CreationDate);
-        
+
         // actualizamos el documente de firebase realtimadatabase
         await MyApplication.repository.UpdateItemRemote(itemRemote, resultUi: this);
     }
@@ -165,10 +172,7 @@ public class MenuUpdateItem : MenuCrud, IResult, IResultDialogDelete
     private async Task<bool> DeleteImageRemote()
     {
         // imagén de firebase storage
-        ManageStorageRemote manageMaterialRemote =
-                     new ManageStorageRemote(currentItemSelected.ImageName);
-        await manageMaterialRemote.DeleteImageRemote();
-        return true;
+        return await MyApplication.repository.DeleteImageStorage(currentItemSelected.ImageName);
     }
  
     /// <summary>
@@ -182,10 +186,23 @@ public class MenuUpdateItem : MenuCrud, IResult, IResultDialogDelete
 
     public async void ConfirmDialogDelete(bool isDeleteConfirm)
     {
-        if(isDeleteConfirm)
+        if (isDeleteConfirm)
         {
-            await DeleteImageRemote();
-            await MyApplication.repository.DeleteItemRemoteById(currentItemSelected.Id, iResultUi: this);
+            bool deleteImageResult = await DeleteImageRemote();
+
+            if (deleteImageResult)
+            {
+                bool deleteDocumentResult = await MyApplication.repository.DeleteItemRemoteById(currentItemSelected.Id, iResultUi: this);
+
+                if (!deleteDocumentResult)
+                {
+                    SetResultCrudUi("Error", "Error al borrar el documento");
+                }
+            }
+            else
+            {
+                SetResultCrudUi("Error", "Error al borrar la imagén remota");
+            }
         }
     }
 

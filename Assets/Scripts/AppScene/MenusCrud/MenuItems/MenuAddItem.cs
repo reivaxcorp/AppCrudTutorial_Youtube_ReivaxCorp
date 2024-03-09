@@ -46,7 +46,7 @@ public class MenuAddItem : MenuCrud, IResult
     /// </summary>
     public async void CreateDocumentRemote()
     {
-        if(AppConfig.IsItemAvariableToPut())
+        if (AppConfig.IsItemAvariableToPut())
         {
             if (IsDataSetted())
             {
@@ -55,14 +55,21 @@ public class MenuAddItem : MenuCrud, IResult
                 byte[] fileBytes = fileManager.GetBytesImageSelected();
                 // Generar nombre de imagén aleatorea
                 generateImageName = Guid.NewGuid().ToString();
-                ManageStorageRemote manageStorageRemote =
-                    new ManageStorageRemote(generateImageName, fileManager.folderNameUser, fileBytes);
                 // subir nueva imagén
-                await manageStorageRemote.UploadFileFirebaseStorage();
-                fileManager.ChangeNameImageCopySelected(generateImageName);
-                WriteDocumentRemote(generateImageName);
+                bool uploadResult = await MyApplication.repository.UploadFileFirebaseStorage(generateImageName, fileManager.folderNameUser, fileBytes);
+
+                if (uploadResult)
+                {
+                    fileManager.ChangeNameImageCopySelected(generateImageName);
+                    WriteDocumentRemote(generateImageName);
+                }
+                else
+                {
+                    SetResultCrudUi("Error", "Error al subir el documento");
+                }
             }
-        } else
+        }
+        else
         {
             SetMsjInfoUI("Ítems maximos alcanzados, edita ó borra uno");
         }
