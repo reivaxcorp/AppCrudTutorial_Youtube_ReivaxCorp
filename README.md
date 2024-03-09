@@ -1,7 +1,7 @@
 # App Crud Tutorial Unity 3D
 
 Este proyecto es una aplicación CRUD (Create, Read, Update, Delete) desarrollada en Unity 3D. La aplicación utiliza Firebase para gestionar datos en tiempo real, almacenamiento de archivos y autenticación.
-La aplicación trata específicamente en el manejo de texturas dentro en una aplicación Android, aunque también se puede adaptar a otras plataformas.
+La aplicación trata específicamente en el manejo de texturas dentro en una aplicación Android.
 A continuación, se detallan los pasos para configurar y ejecutar la aplicación:
 
 ## Videos tutoriales del proyecto
