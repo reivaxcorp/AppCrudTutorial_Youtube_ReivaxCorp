@@ -11,21 +11,25 @@ La serie de tutoriales consta de varios videos, cada uno cubriendo un aspecto es
 ## Configuración en Firebase
 
 - Crea un proyecto en Firebase:
--	Accede a la Consola de Firebase.
--	Crea un nuevo proyecto y selecciona la plataforma (en nuestro caso, Android).
--	En la pestaña “Agregar app”, ingresa el nombre de tu paquete (que utilizarás en Unity 3D).
-- Descarga el archivo de configuración:
--	Completa los pasos proporcionados por Firebase.
--	Descarga el archivo google-services.json.
+- Deshabilita Analytics para este proyecto, al crear el proyecto.
+- Ve a Descripción general del proyecto -> Configuración del proyecto.
+- En "Tu apps", crea un nuevo proyecto y selecciona la plataforma (en nuestro caso, Android).
+-	En la pestaña “Agrega Firebase a tu app para Android”, ingresa el nombre de tu paquete, que utilizarás también en Unity 3D.
+-	Luego selecciona a registrar app.
+-	Termina el resto del registro con "Siguiente".
+- Ve a la consola, "Ir a consola"
 
-# Configura las reglas de firebase:
--	En la sección “Realtime Database”, establece las reglas de acceso, el la pestaña "Reglas".
-- Haz lo mismo para la sección “Storage”.
-
-- RealtimeDAtabase:
+# Configura las reglas de firebase Realtime Database:
+- En la barra lateral, en Compilación, selecciona "Realtime Database"
+- Luego le selecciona a "Crear una base de datos"
+- Selecciona la ubicación que más te convenga.
+- Luego, en "Configurar base de datos", tilda "Comenzar e nmodo de prueba", despúes lo modificamos.
+-	Despúes, en la sección “Realtime Database”, establece las reglas de acceso, el la pestaña "Reglas".
+- Copia y pega estas reglas:
 
   ```json
-  "rules": {      
+{
+"rules": {      
      "users": {
       "$userUid": {
        	"items": {
@@ -36,11 +40,19 @@ La serie de tutoriales consta de varios videos, cada uno cubriendo un aspecto es
       }
     }
   }
+}
   ```
-  
-- FirebaseStorage:
+# Configura las reglas de firebase Realtime Database:
+- En la barra lateral, en Compilación, selecciona "Storage"
+- Luego selecciona "Comenzar"
+- Luego en Configura Cloud Storage, selecciona "Comenzar en modo de prueba", luego lo modificamos.
+- Selecciona la zona que mejor te convenga, y selecciona "Listo".
+-	Despúes, en la sección “Storage”, establece las reglas de acceso, el la pestaña "Reglas".
+- Copia y pega estas reglas:
 
 ```markdown
+rules_version = '2';
+
 service firebase.storage {
   match /b/{bucket}/o {
     match /users/{uidFolder}/imageItems/{fileName} {
@@ -60,10 +72,17 @@ service firebase.storage {
 }
 ```
 # Configura la autenticación:
--	En la sección “Authentication” (barra lateral), habilita el método de acceso con “Correo electrónico/contraseña”.
-- En la pestaña "Plantillas" personaliza las plantillas de confirmación de email según el nombre de tu aplicación en "Nombre del remitente", también puedes 
-  configurar el idioma de la plantilla.
-
+- En la barra lateral, en Compilación, selecciona "Authentication", habilita el método de acceso con “Correo electrónico/contraseña”.
+- Luego selecciona "Comenzar"
+- Despúes en "Agrega tu primer método de acceso y comienza a utilizar Firebase Auth", selecciona "Correo electrónico/contraseña"
+- En Proveedores de acceso, habilita la opcion Correo electrónico/contraseña, y selecciona "guardar"
+- El siguiente paso, en la pestaña "Plantillas" personaliza las plantillas de confirmación de email, que se enviara a los usuarios, cuando inicien sesión.
+- Selecciona editar plantilla, y en nombre de remitente puedes poner el nombre de tu aplicación, y si quieres cambias el idioma. Luego selecciona guardar.
+# Descargar la configuración:
+- Luego debes descargar el google-services.json. Recuerda que si añades otra funcionalidad, tambien deberas volver a descargar este archivo actualizado.
+- Te vas a Descripción general del proyecto -> Configuración de proyecto.
+- En "Tus apps", descarga el "google-services.json"
+  
 ## Configuración en Unity 3D para Firebase
 
   # Descarga el SDK de Firebase:
